@@ -33,32 +33,30 @@ $(document).ready(function () {
 
   // 이닝 변경 버튼 클릭 이벤트
   $('.inning-control button').on('click', function () {
-    // 이전 이닝 버튼 클릭 시 인덱스 감소 (첫 이닝까지)
-    if ($(this).find('img').attr('alt') === 'prev' && inningIndex > 0) {
+    let alt = $(this).find('img').attr('alt');
+    if (alt === 'prev' && inningIndex > 0) {
       inningIndex--;
-    }
-    // 다음 이닝 버튼 클릭 시 인덱스 증가 (마지막 이닝까지)
-    else if (
-      $(this).find('img').attr('alt') === 'next' &&
-      inningIndex < innings.length - 1
-    ) {
+      // 이전 이닝으로 갈 때는 베이스와 카운트 초기화하지 않음
+    } else if (alt === 'next' && inningIndex < innings.length - 1) {
       inningIndex++;
+      // 다음 이닝으로 전환 시 베이스와 모든 카운트 초기화
+      resetAllCounts();
+      $('.base').removeClass('active');
     }
-    // 변경된 이닝 텍스트 업데이트
     $('.inning-control span').text(innings[inningIndex]);
   });
 
   // 점수 조정 버튼 클릭 이벤트
   $('.score-button-wrapper .score-button').on('click', function () {
     let $score = $(this).closest('.score-wrapper').find('.score');
-    let currentScore = parseInt($score.text());
+    let currentScore = parseInt($score.text(), 10);
 
-    // 점수 증가 버튼 클릭 시 +1
     if ($(this).find('img').attr('alt') === 'plus') {
       $score.text(currentScore + 1);
-    }
-    // 점수 감소 버튼 클릭 시 (0까지)
-    else if ($(this).find('img').attr('alt') === 'minus' && currentScore > 0) {
+    } else if (
+      $(this).find('img').attr('alt') === 'minus' &&
+      currentScore > 0
+    ) {
       $score.text(currentScore - 1);
     }
   });
@@ -75,32 +73,37 @@ $(document).ready(function () {
     $('.base').removeClass('active');
   });
 
-  // 볼, 스트라이크, 아웃 카운트 클릭 이벤트 (fade 효과)
+  // 볼, 스트라이크, 아웃 카운트 클릭 이벤트 (fade 효과 적용)
   $('.count.ball, .count.strike, .count.out').on('click', function () {
     let $this = $(this);
     $this.fadeTo(250, 0, function () {
       $this.toggleClass('active').fadeTo(250, 1, function () {
+        // 각 그룹 내 active 상태를 왼쪽부터 채우도록 재정렬
+        reorderCountGroup('ball');
+        reorderCountGroup('strike');
+        reorderCountGroup('out');
+
         let ballCount = $('.count.ball.active').length;
         let strikeCount = $('.count.strike.active').length;
         let outCount = $('.count.out.active').length;
 
         // 볼 4개 -> 볼, 스트라이크 초기화 후 주자 진루
         if (ballCount === 4) {
-          resetBallAndStrike(); // 볼, 스트라이크 초기화
-          advanceRunner(); // 주자 진루
+          resetBallAndStrike();
+          advanceRunner();
         }
 
         // 스트라이크 3개 -> 볼, 스트라이크 초기화 후 아웃 카운트 증가
         if (strikeCount === 3) {
-          resetBallAndStrike(); // 볼, 스트라이크 초기화
-          advanceOut(); // 아웃 카운트 증가
+          resetBallAndStrike();
+          advanceOut();
         }
 
-        // 아웃 3개 -> 모든 카운트 초기화 후 이닝 자동 전환
+        // 아웃 3개 -> 모든 카운트와 베이스 초기화 후 다음 이닝으로 전환
         if ($('.count.out.active').length === 3) {
-          resetAllCounts(); // 모든 카운트 초기화
-          $('.base').removeClass('active'); // 모든 베이스 초기화
-          nextInning(); // 다음 이닝으로 전환
+          resetAllCounts();
+          $('.base').removeClass('active');
+          nextInning();
         }
       });
     });
@@ -111,7 +114,7 @@ $(document).ready(function () {
     $(this).closest('.count-container').find('.count').removeClass('active');
   });
 
-  // 볼 & 스트라이크 초기화 (B/S)
+  // 볼 & 스트라이크 초기화 함수 (B/S)
   function resetBallAndStrike() {
     $('.count.ball, .count.strike').removeClass('active');
   }
@@ -121,27 +124,31 @@ $(document).ready(function () {
     $('.count.ball, .count.strike, .count.out').removeClass('active');
   }
 
+  // 각 카운트 그룹을 왼쪽부터 채움
+  function reorderCountGroup(type) {
+    let $group = $('.count.' + type);
+    let activeCount = $group.filter('.active').length;
+    // 모든 항목에서 active 제거 후, 왼쪽부터 active 재설정
+    $group.removeClass('active');
+    $group.slice(0, activeCount).addClass('active');
+  }
+
   // 볼넷 -> 주자 진루
   function advanceRunner() {
     let firstBase = $('.base').eq(2); // 1루
     let secondBase = $('.base').eq(0); // 2루
     let thirdBase = $('.base').eq(1); // 3루
 
-    // 1루가 비어 있다면 1루 주자 배치
     if (!firstBase.hasClass('active')) {
       firstBase.addClass('active');
       return;
     }
-
-    // 2루가 비어 있다면 1루 주자를 이동 후 1루 새 주자 배치
     if (!secondBase.hasClass('active')) {
       firstBase.removeClass('active');
       secondBase.addClass('active');
       firstBase.addClass('active');
       return;
     }
-
-    // 3루가 비어 있다면 2루 주자를 이동 후 1, 2루 주자 유지
     if (!thirdBase.hasClass('active')) {
       secondBase.removeClass('active');
       thirdBase.addClass('active');
@@ -150,8 +157,7 @@ $(document).ready(function () {
       firstBase.addClass('active');
       return;
     }
-
-    // 만루일 경우 3루 주자만 제거 후 나머지 한 베이스씩 이동
+    // 만루 상황: 3루 주자 제거 후 나머지 한 베이스씩 이동
     thirdBase.removeClass('active');
     secondBase.removeClass('active');
     thirdBase.addClass('active');
@@ -173,6 +179,9 @@ $(document).ready(function () {
     if (inningIndex < innings.length - 1) {
       inningIndex++;
       $('.inning-control span').text(innings[inningIndex]);
+      // 다음 이닝 전환 시 모든 카운트와 베이스 초기화
+      resetAllCounts();
+      $('.base').removeClass('active');
     }
   }
 });
