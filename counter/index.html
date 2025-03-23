@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans+KR:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="./script.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- 헤더 -->
+      <header class="header">
+        <button type="button" class="back-button">
+          <img src="./image/chevron-left.svg" alt="back" />
+        </button>
+        <h1>제38회 서울시장기 대회</h1>
+      </header>
+      <!-- //헤더 -->
+
+      <!-- 메인 -->
+      <main class="main">
+        <!-- 이닝 -->
+        <div class="inning-control">
+          <button type="button">
+            <img src="./image/chevron-left-bold.svg" alt="prev" />
+          </button>
+          <span>1 회초</span>
+          <button type="button">
+            <img src="./image/chevron-right-bold.svg" alt="next" />
+          </button>
+        </div>
+        <!-- //이닝 -->
+
+        <!-- 첫 번째 팀 스코어 -->
+        <div class="team-score-container">
+          <!-- 팀명 -->
+          <span class="team-name">강릉고</span>
+          <!-- //팀명 -->
+
+          <!-- 스코어 / 조정 버튼 -->
+          <div class="score-wrapper">
+            <!-- 스코어 -->
+            <div class="score">0</div>
+            <!-- //스코어 -->
+
+            <!-- 조정 버튼 -->
+            <div class="score-button-wrapper">
+              <button type="button" class="score-button">
+                <img src="./image/score-up.svg" alt="plus" />
+              </button>
+              <button type="button" class="score-button">
+                <img src="./image/score-down.svg" alt="minus" />
+              </button>
+            </div>
+            <!-- //조정 버튼 -->
+          </div>
+          <!-- //스코어 / 조정 버튼 -->
+        </div>
+        <!-- //첫 번째 팀 스코어 -->
+
+        <!-- 두 번째 팀 스코어 -->
+        <div class="team-score-container">
+          <!-- 팀명 -->
+          <span class="team-name">선린상고</span>
+          <!-- //팀명 -->
+
+          <!-- 스코어 / 조정 버튼 -->
+          <div class="score-wrapper">
+            <!-- 스코어 -->
+            <div class="score">0</div>
+            <!-- //스코어 -->
+
+            <!-- 조정 버튼 -->
+            <div class="score-button-wrapper">
+              <button type="button" class="score-button">
+                <img src="./image/score-up.svg" alt="plus" />
+              </button>
+              <button type="button" class="score-button">
+                <img src="./image/score-down.svg" alt="minus" />
+              </button>
+            </div>
+            <!-- //조정 버튼 -->
+          </div>
+          <!-- //스코어 / 조정 버튼 -->
+        </div>
+        <!-- //두 번째 팀 스코어 -->
+
+        <!-- 베이스 상황 -->
+        <div class="base-indicator">
+          <div class="base-row">
+            <!-- 2루 -->
+            <div class="base"></div>
+            <!-- //2루 -->
+          </div>
+          <div class="base-row">
+            <!-- 3루 -->
+            <div class="base"></div>
+            <!-- //3루 -->
+
+            <!-- 1루 -->
+            <div class="base"></div>
+            <!-- //1루 -->
+          </div>
+
+          <!-- 베이스 상황 리셋 버튼 -->
+          <button type="button" class="base-reset">
+            <img src="./image/reset.svg" alt="reset" />
+          </button>
+          <!-- //베이스 상황 리셋 버튼 -->
+        </div>
+        <!-- //베이스 상황 -->
+
+        <!-- 카운트 -->
+        <div class="count-indicator">
+          <!-- 볼 카운트 -->
+          <div class="count-container">
+            <div class="count-row">
+              <span>B</span>
+              <div class="count-wrapper">
+                <div class="count ball"></div>
+                <div class="count ball"></div>
+                <div class="count ball"></div>
+                <div class="count ball"></div>
+              </div>
+            </div>
+
+            <!-- 리셋 버튼 -->
+            <button type="button" class="count-reset">
+              <img src="./image/reset.svg" alt="reset" />
+            </button>
+            <!-- //리셋 버튼 -->
+          </div>
+          <!-- //볼 카운트 -->
+
+          <!-- 스트라이크 카운트 -->
+          <div class="count-container">
+            <div class="count-row">
+              <span>S</span>
+              <div class="count-wrapper">
+                <div class="count strike"></div>
+                <div class="count strike"></div>
+                <div class="count strike"></div>
+              </div>
+            </div>
+
+            <!-- 리셋 버튼 -->
+            <button type="button" class="count-reset">
+              <img src="./image/reset.svg" alt="reset" />
+            </button>
+            <!-- //리셋 버튼 -->
+          </div>
+          <!-- //스트라이크 카운트 -->
+
+          <!-- 아웃 카운트 -->
+          <div class="count-container">
+            <div class="count-row">
+              <span>O</span>
+              <div class="count-wrapper">
+                <div class="count out"></div>
+                <div class="count out"></div>
+                <div class="count out"></div>
+              </div>
+            </div>
+
+            <!-- 리셋 버튼 -->
+            <button type="button" class="count-reset">
+              <img src="./image/reset.svg" alt="reset" />
+            </button>
+            <!-- //리셋 버튼 -->
+          </div>
+          <!-- //아웃 카운트 -->
+        </div>
+        <!-- //카운트 -->
+
+        <!-- 전송 버튼 -->
+        <button type="button" class="send-button">
+          <img src="./image/send-icon.svg" alt="send" />
+          <span>SEND</span>
+        </button>
+        <!-- //전송 버튼 -->
+      </main>
+      <!-- //메인 -->
+    </div>
+  </body>
+</html>

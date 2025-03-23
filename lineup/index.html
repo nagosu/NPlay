@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Noto+Sans+KR:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="./script.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- 헤더 -->
+      <header class="header">
+        <button type="button" class="back-button">
+          <img src="./image/chevron-left.svg" alt="back" />
+        </button>
+        <h1>제38회 서울시장기 대회</h1>
+      </header>
+      <!-- //헤더 -->
+
+      <!-- 메인 -->
+      <main class="main">
+        <!-- 팀명 선택 -->
+        <div class="team-selector">
+          <button type="button" class="active">배재중학교</button>
+          <button type="button">경기중학교</button>
+        </div>
+        <!-- // 팀명 선택 -->
+
+        <!-- 타순 및 선수 목록 테이블 -->
+        <div class="lineup-table">
+          <!-- 타이틀 -->
+          <div class="info-title">
+            <span>타순</span>
+            <span>선수명</span>
+            <span>백넘버</span>
+            <span>포지션</span>
+          </div>
+          <!-- //타이틀 -->
+
+          <!-- 타순 및 목록 -->
+          <div class="lineup-col">
+            <!-- 선수 정보 아이템 -->
+            <div class="player focused">
+              <span>1</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+
+            <!-- 선택 폼 -->
+            <div class="select-form">
+              <!-- 타이틀 -->
+              <div class="select-title">
+                <span>1학년</span>
+                <span>2학년</span>
+                <span>3학년</span>
+                <span>포지션</span>
+              </div>
+              <!-- //타이틀 -->
+
+              <!-- 선택 컨테이너 -->
+              <div class="select-container">
+                <!-- 선택 컬럼 (1학년) -->
+                <div class="select-col">
+                  <div class="select-item">김민수 (10)</div>
+                  <div class="select-item">이준호 (11)</div>
+                  <div class="select-item">박지훈 (12)</div>
+                  <div class="select-item">최영수 (13)</div>
+                  <div class="select-item">정승원 (14)</div>
+                  <div class="select-item">한동훈 (15)</div>
+                  <div class="select-item">강태준 (16)</div>
+                  <div class="select-item">송지환 (17)</div>
+                  <div class="select-item">임도현 (18)</div>
+                  <div class="select-item">배성민 (19)</div>
+                </div>
+                <!-- //선택 컬럼 (1학년) -->
+
+                <div class="select-col (2학년)">
+                  <div class="select-item">윤대현 (20)</div>
+                  <div class="select-item">김성준 (21)</div>
+                  <div class="select-item">오세훈 (22)</div>
+                  <div class="select-item">장우진 (23)</div>
+                  <div class="select-item">조민기 (24)</div>
+                  <div class="select-item">서준혁 (25)</div>
+                  <div class="select-item">강민호 (26)</div>
+                  <div class="select-item">이상훈 (27)</div>
+                  <div class="select-item">최진우 (28)</div>
+                </div>
+                <!-- //선택 컬럼 (2학년) -->
+
+                <!-- 선택 컬럼 (3학년) -->
+                <div class="select-col">
+                  <div class="select-item">하승민 (29)</div>
+                  <div class="select-item">정우빈 (30)</div>
+                  <div class="select-item">이태훈 (31)</div>
+                  <div class="select-item">김동현 (32)</div>
+                  <div class="select-item">박서준 (33)</div>
+                  <div class="select-item">유진호 (34)</div>
+                  <div class="select-item">강현우 (35)</div>
+                  <div class="select-item">손지훈 (36)</div>
+                  <div class="select-item">배현준 (37)</div>
+                  <div class="select-item">이도현 (38)</div>
+                  <div class="select-item">송민수 (39)</div>
+                  <div class="select-item">조성우 (40)</div>
+                </div>
+                <!-- //선택 컬럼 (3학년) -->
+
+                <!-- 선택 컬럼 (포지션) -->
+                <div class="select-col">
+                  <div class="select-item position">투수</div>
+                  <div class="select-item position">포수</div>
+                  <div class="select-item position">1루수</div>
+                  <div class="select-item position">2루수</div>
+                  <div class="select-item position">3루수</div>
+                  <div class="select-item position">유격수</div>
+                  <div class="select-item position">좌익수</div>
+                  <div class="select-item position">중견수</div>
+                  <div class="select-item position">우익수</div>
+                  <div class="select-item position">지명타자</div>
+                </div>
+                <!-- //선택 컬럼 (포지션) -->
+              </div>
+              <!-- //선택 컨테이너 -->
+            </div>
+            <!-- //선택 폼 -->
+
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>2</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>3</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>4</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>5</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>6</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>7</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>8</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>9</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+            <!-- 선수 정보 아이템 -->
+            <div class="player">
+              <span>10</span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <!-- //선수 정보 아이템 -->
+          </div>
+          <!-- //타순 및 목록 -->
+        </div>
+        <!-- //타순 및 선수 목록 테이블 -->
+
+        <!-- 전송 버튼 -->
+        <button type="button" class="send-button">
+          <img src="./image/send-icon.svg" alt="send" />
+          <span>SEND</span>
+        </button>
+        <!-- //전송 버튼 -->
+      </main>
+      <!-- //메인 -->
+    </div>
+  </body>
+</html>
