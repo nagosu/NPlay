@@ -32,12 +32,14 @@ $(document).ready(function () {
       }
 
       // player 내부에 표시된 이름, 번호, 포지션 초기화
-      $this.find('span').eq(1).text('');
-      $this.find('span').eq(2).text('');
-      $this.find('span').eq(3).text('');
+      if (!$this.hasClass('pitcher')) {
+        $this.find('span').eq(1).text('');
+        $this.find('span').eq(2).text('');
+        $this.find('span').eq(3).text('');
+      }
 
-      // set, pitcher 클래스 제거 및 데이터 초기화
-      $this.removeClass('set pitcher');
+      // set 클래스 제거 및 데이터 초기화
+      $this.removeClass('set');
       $this.removeData('selectedPlayer selectedPosition');
     }
 
@@ -49,7 +51,58 @@ $(document).ready(function () {
     const $selectForm = $('.select-form');
     $selectForm.slideUp(500, function () {
       $this.after($selectForm);
+
+      // pitcher 클래스를 가진 player인 경우, 포지션 선택 항목을 투수로 제한
+      if ($this.hasClass('pitcher')) {
+        $('.select-item.position').each(function () {
+          const text = $(this).text().trim();
+          if (text !== '투수') {
+            $(this).hide();
+          } else {
+            $(this).show();
+          }
+        });
+      } else {
+        // pitcher가 아닌 경우 모든 포지션 항목을 보이게 처리
+        $('.select-item.position').show();
+      }
+
       updateSelectedInForm($selectForm);
+
+      // update 이후에 focused/disabled 부여
+      if ($this.hasClass('pitcher')) {
+        $('.select-item.position').each(function () {
+          const text = $(this).text().trim();
+          if (text === '투수') {
+            $(this).addClass('disabled');
+            // 이미 selected된 항목은 유지하고, 아닐 경우에만 focused 추가
+            if (!$(this).hasClass('selected')) {
+              $(this).addClass('focused');
+            }
+          }
+        });
+
+        // pitcher 박스 내부 span에서 이름을 직접 가져오기
+        const pitcherName = $this.find('span').eq(1).text().trim(); // 이름
+        const pitcherNumber = $this.find('span').eq(2).text().trim(); // 번호
+
+        if (pitcherName) {
+          // 이름 (번호) 형식으로 구성
+          const fullText = pitcherNumber
+            ? `${pitcherName} (${pitcherNumber})`
+            : pitcherName;
+
+          // select-item 중 텍스트가 일치하는 항목에 focused 추가
+          $('.select-item:not(.position)').each(function () {
+            if ($(this).text().trim() === fullText) {
+              // ✅ 이미 selected된 항목은 유지하고, 아닐 경우에만 focused 추가
+              if (!$(this).hasClass('selected')) {
+                $(this).addClass('focused');
+              }
+            }
+          });
+        }
+      }
       $selectForm.slideDown(500);
     });
   });
@@ -59,10 +112,43 @@ $(document).ready(function () {
     const $this = $(this);
     const text = $this.text().trim();
 
-    // 이미 선택된 항목은 재선택 방지
-    if ($this.hasClass('selected')) return;
+    // 이미 선택된 항목은 재선택 방지 + 모달 표시
+    if ($this.hasClass('selected')) {
+      if ($this.hasClass('position')) {
+        openSelectedPositionModal(); // 포지션 중복 선택 시 모달
+      } else {
+        openSelectedPlayerModal(); // 선수 중복 선택 시 모달
+      }
+      return;
+    }
 
     if ($this.hasClass('position')) {
+      const selectedPosition = $this.text().trim();
+
+      // 1~9번에 투수가 선택되어 있을 때, 지명타자를 선택하려는 경우
+      const hasPitcherInLineup =
+        $('.player.set').filter(function () {
+          const pos = $(this).find('span').eq(3).text().trim();
+          const index = $(this).index();
+          return pos === '투수' && index < 10;
+        }).length > 0;
+
+      // 1~9번에 지명타자가 선택되어 있을 때, 투수를 선택하려는 경우
+      const hasDhInLineup =
+        $('.player.set').filter(function () {
+          const pos = $(this).find('span').eq(3).text().trim();
+          const index = $(this).index();
+          return pos === '지명타자' && index < 10;
+        }).length > 0;
+
+      if (
+        (selectedPosition === '지명타자' && hasPitcherInLineup) ||
+        (selectedPosition === '투수' && hasDhInLineup)
+      ) {
+        openSelectedPositionModal(); // 지명타자 또는 투수 중복 선택 시 모달
+        return;
+      }
+
       // 포지션 중복 선택 방지
       const isDuplicate =
         $('.select-item.selected.position').filter(function () {
@@ -135,21 +221,49 @@ $(document).ready(function () {
       // 현재 선택한 player에 이름, 번호, 포지션을 표시
       $currentPlayer.find('span').eq(1).text(playerName);
       $currentPlayer.find('span').eq(2).text(playerNumber);
-      $currentPlayer.find('span').eq(3).text(selectedPositionText);
+      if (!$currentPlayer.hasClass('pitcher')) {
+        $currentPlayer.find('span').eq(3).text(selectedPositionText);
+      }
 
       // 기존 focused 제거
       $currentPlayer.removeClass('focused');
 
-      // 포지션에 따라 클래스 지정
-      if (selectedPositionText === '투수') {
-        $currentPlayer.removeClass('set').addClass('pitcher');
-      } else {
+      // set 클래스 지정
+      if (!$currentPlayer.hasClass('pitcher')) {
         $currentPlayer.addClass('set');
+
+        if (selectedPositionText === '투수') {
+          // 투수인 경우 disabled 클래스 지정
+          $currentPlayer.addClass('disabled');
+
+          // 투수 박스에도 동일하게 정보 업데이트
+          const $pitcherBox = $('.player.pitcher');
+          $pitcherBox.find('span').eq(1).text(playerName);
+          $pitcherBox.find('span').eq(2).text(playerNumber);
+
+          // 선택 데이터 저장 (투수 박스에도 동일하게 저장)
+          $pitcherBox.data('selectedPlayer', playerName);
+          $pitcherBox.data('selectedPosition', selectedPositionText);
+        }
       }
 
       // 나중에 수정할 수 있도록 선택 데이터를 저장
       $currentPlayer.data('selectedPlayer', playerName);
       $currentPlayer.data('selectedPosition', selectedPositionText);
+
+      // pitcher 선택 시, 일반 투수 박스도 동기화
+      if ($currentPlayer.hasClass('pitcher')) {
+        $('.player.set').each(function () {
+          const $player = $(this);
+          const posText = $player.find('span').eq(3).text().trim();
+          if (posText === '투수' && !$player.hasClass('pitcher')) {
+            $player.find('span').eq(1).text(playerName);
+            $player.find('span').eq(2).text(playerNumber);
+            $player.data('selectedPlayer', playerName);
+            $player.data('selectedPosition', selectedPositionText);
+          }
+        });
+      }
     }
 
     // 선택한 항목에 selected 부여 및 focused 해제
@@ -174,6 +288,8 @@ $(document).ready(function () {
       // 모든 선수가 선택 완료되었으면 선택폼을 닫음
       $selectForm.slideUp(500);
     }
+
+    $('.select-item.position').removeClass('focused disabled').show();
   }
 
   // 선택 폼 내 항목들의 selected 및 focused 상태를 최신 상태로 갱신
@@ -182,20 +298,51 @@ $(document).ready(function () {
       const $item = $(this);
       const text = $item.text().trim();
 
-      // 현재 선택된 텍스트와 일치하는 항목에만 selected 클래스 유지
       const isSelected =
         $('.select-item.selected').filter(function () {
           return $(this).text().trim() === text;
         }).length > 0;
 
-      if (isSelected) {
+      const isFocused = $item.hasClass('focused');
+
+      if (isSelected || isFocused) {
         $item.addClass('selected');
       } else {
         $item.removeClass('selected');
       }
 
-      // 모든 항목의 focused 클래스 제거
+      // focused는 무조건 제거
       $item.removeClass('focused');
     });
   }
+
+  // 등록된 선수입니다 모달 열기
+  function openSelectedPlayerModal() {
+    $('.modal-overlay.pop-a').attr('style', 'display: flex');
+  }
+
+  // 등록된 선수입니다 모달 닫기
+  function closeSelectedPlayerModal() {
+    $('.modal-overlay.pop-a').fadeOut(200);
+  }
+
+  // 등록된 선수입니다 버튼 클릭 시 모달 열기
+  $(document).on('click', '.modal-button.pop-a', function () {
+    closeSelectedPlayerModal();
+  });
+
+  // 선택할 수 없습니다 모달 열기
+  function openSelectedPositionModal() {
+    $('.modal-overlay.pop-b').attr('style', 'display: flex');
+  }
+
+  // 선택할 수 없습니다 모달 닫기
+  function closeSelectedPositionModal() {
+    $('.modal-overlay.pop-b').fadeOut(200);
+  }
+
+  // 선택할 수 없습니다 버튼 클릭 시 모달 열기
+  $(document).on('click', '.modal-button.pop-b', function () {
+    closeSelectedPositionModal();
+  });
 });
