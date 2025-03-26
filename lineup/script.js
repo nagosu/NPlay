@@ -36,6 +36,24 @@ $(document).ready(function () {
         $this.find('span').eq(1).text('');
         $this.find('span').eq(2).text('');
         $this.find('span').eq(3).text('');
+      } else {
+        // pitcher인 경우, 이름, 번호만 초기화
+        $this.find('span').eq(1).text('');
+        $this.find('span').eq(2).text('');
+
+        // 일반 player 중 포지션이 투수인 항목도 초기화
+        $('.player.set').each(function () {
+          const $player = $(this);
+          const posText = $player.find('span').eq(3).text().trim();
+          if (posText === '투수' && !$player.hasClass('pitcher')) {
+            $player.addClass('was-pitcher');
+            $player.find('span').eq(1).text('');
+            $player.find('span').eq(2).text('');
+            $player.find('span').eq(3).text('');
+            $player.removeClass('set disabled');
+            $player.removeData('selectedPlayer selectedPosition');
+          }
+        });
       }
 
       // set 클래스 제거 및 데이터 초기화
@@ -46,6 +64,20 @@ $(document).ready(function () {
     // 기존에 focused 클래스가 있던 player에서 제거 후, 현재 player에 추가
     $('.player.focused').removeClass('focused');
     $this.addClass('focused');
+
+    if (!$this.hasClass('was-pitcher') && !$this.hasClass('pitcher')) {
+      $('.player')
+        .slice(0, 9)
+        .each(function () {
+          const pos = $(this).find('span').eq(3).text().trim();
+          if (pos !== '투수') {
+            $(this).removeClass('was-pitcher');
+          }
+        });
+    }
+
+    // 선택폼 이동 전 상태 초기화
+    $('.select-item.position').removeClass('disabled');
 
     // 선택 폼을 현재 player 위치로 이동시키고 상태 업데이트
     const $selectForm = $('.select-form');
@@ -263,12 +295,28 @@ $(document).ready(function () {
             $player.data('selectedPosition', selectedPositionText);
           }
         });
+
+        // was-pitcher 클래스가 붙은 player에도 정보 반영
+        $('.player.was-pitcher').each(function () {
+          const $player = $(this);
+          $player.find('span').eq(1).text(playerName);
+          $player.find('span').eq(2).text(playerNumber);
+          $player.find('span').eq(3).text(selectedPositionText);
+          $player.data('selectedPlayer', playerName);
+          $player.data('selectedPosition', selectedPositionText);
+          $player.addClass('set disabled');
+        });
       }
     }
 
     // 선택한 항목에 selected 부여 및 focused 해제
-    $selectedPlayerItem.addClass('selected').removeClass('focused');
-    $selectedPositionItem.addClass('selected').removeClass('focused');
+    if (
+      $selectedPlayerItem.length !== 0 &&
+      $selectedPositionItem.length !== 0
+    ) {
+      $selectedPlayerItem.addClass('selected').removeClass('focused');
+      $selectedPositionItem.addClass('selected').removeClass('focused');
+    }
 
     // 아직 선택되지 않은 다음 player를 찾아 focused 지정 및 선택폼 이동
     const $nextPlayer = $('.player')
@@ -294,6 +342,10 @@ $(document).ready(function () {
 
   // 선택 폼 내 항목들의 selected 및 focused 상태를 최신 상태로 갱신
   function updateSelectedInForm($form) {
+    const hasPlayer =
+      $form.find('.select-item.focused:not(.position)').length > 0;
+    const hasPosition = $form.find('.select-item.focused.position').length > 0;
+
     $form.find('.select-item').each(function () {
       const $item = $(this);
       const text = $item.text().trim();
@@ -305,9 +357,10 @@ $(document).ready(function () {
 
       const isFocused = $item.hasClass('focused');
 
-      if (isSelected || isFocused) {
+      // selected는 focused가 둘 다 있는 경우에만 적용
+      if (isFocused && hasPlayer && hasPosition) {
         $item.addClass('selected');
-      } else {
+      } else if (!isSelected) {
         $item.removeClass('selected');
       }
 
