@@ -398,4 +398,28 @@ $(document).ready(function () {
   $(document).on('click', '.modal-button.pop-b', function () {
     closeSelectedPositionModal();
   });
+
+  $(document).on('click', '.send-button', function (e) {
+    // 선택 폼이 열려 있으면 SEND 동작 방지
+    if ($('.select-form').is(':visible')) {
+      e.preventDefault();
+      return;
+    }
+
+    // pitcher player의 이름 또는 번호가 비어 있으면 선택 폼 열기
+    const $pitcher = $('.player.pitcher');
+    const name = $pitcher.find('span').eq(1).text().trim();
+    const number = $pitcher.find('span').eq(2).text().trim();
+
+    if (!name || !number) {
+      e.preventDefault();
+      $pitcher.trigger('click');
+
+      // 선택 폼 열리는 걸 기다렸다가 스크롤
+      setTimeout(function () {
+        $('html, body').animate({ scrollTop: $(document).height() }, 500);
+      }, 300);
+      return;
+    }
+  });
 });
